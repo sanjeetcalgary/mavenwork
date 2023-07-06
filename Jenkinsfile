@@ -15,6 +15,9 @@ pipeline{
         DOCKER_PASSWORD = credentials('dockerpwd')
         NEXUS_USER = credentials('nexusID')
         NEXUS_PWD = credentials('nexusPwd')
+        NEXUS_IMAGE_TAG = "10.0.0.174:8083/java-maven:v1.3.0"
+        DOCKER_TAG = "sanjeetkr/web-app:v1.3.0"
+        NEXUS_ENDPOINT = "10.0.0.174:8083"
     }
 
     stages {
@@ -26,30 +29,24 @@ pipeline{
                 echo "executing pipeline"
             }
         }
+        
+        stage('Build docker image for nexus') {
+            steps {
+                echo "Building docker nexus image"
+                sh "docker build -t ${NEXUS_IMAGE_TAG} ."
+                sh "docker login -u $NEXUS_USER -p $NEXUS_PWD ${NEXUS_ENDPOINT}"
+                sh "docker push ${NEXUS_IMAGE_TAG}"
+            }
+        }
 
-
-
-        /*
-        stage('Build docker image') {
+        stage('Build docker image for dockerhub') {
             steps {
                 echo "Building docker image"
-                sh "docker build -t 10.0.0.174:8083/java-maven:v3.1 ."
-                sh "docker login -u $NEXUS_USER -p $NEXUS_PWD 10.0.0.174:8083"
-                sh "docker push 10.0.0.174:8083/java-maven:v3.1"
-            }
-        }
-        */
-        /* 
-        stage('Build when not master') {
-             steps {
-                echo "Building docker image"
-                sh "docker build -t sanjeetkr/web-app:v1.1 ."
+                sh "docker build -t ${DOCKER_TAG} ."
                 sh "docker login -u $DOCKER_USER -p $DOCKER_PASSWORD"
-                sh "docker push sanjeetkr/web-app:v1.1"
+                sh "docker push ${DOCKER_TAG}"
             }
         }
-
-        */
 
         stage('Deploy the image') {
             steps {
