@@ -15,8 +15,8 @@ pipeline{
         DOCKER_PASSWORD = credentials('dockerpwd')
         NEXUS_USER = credentials('nexusID')
         NEXUS_PWD = credentials('nexusPwd')
-        NEXUS_IMAGE_TAG = "10.0.0.174:8083/java-maven:v1.3.0"
-        DOCKER_TAG = "sanjeetkr/web-app:v1.3.0"
+        NEXUS_IMAGE_TAG = "10.0.0.174:8083/java-maven:v1.4.0"
+        DOCKER_TAG = "sanjeetkr/web-app:v1.4.0"
         NEXUS_ENDPOINT = "10.0.0.174:8083"
     }
 
@@ -51,6 +51,11 @@ pipeline{
         stage('Deploy the image') {
             steps {
                 echo "Deployment phase"
+                script {
+                    def docker_cmd = "docker run -d -p 8080:8080 ${DOCKER_TAG}"
+                    sshagent(['ec2-server']) { // -o StrictHostKeyChecking=no : used to suppress popup
+                        sh "ssh -o StrictHostKeyChecking=no ec2-user@35.170.201.92 ${docker_cmd}"
+                }
             }
         }
 
