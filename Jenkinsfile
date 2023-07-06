@@ -55,6 +55,7 @@ pipeline{
                     def docker_cmd = "docker run -d -p 8080:8080 ${DOCKER_TAG}"
                     sshagent(['ec2-server']) { // -o StrictHostKeyChecking=no : used to suppress popup
                         sh "ssh -o StrictHostKeyChecking=no ec2-user@35.170.201.92 ${docker_cmd}"
+                    }
                 }
             }
         }
