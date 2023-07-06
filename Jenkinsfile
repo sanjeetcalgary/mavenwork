@@ -15,8 +15,8 @@ pipeline{
         DOCKER_PASSWORD = credentials('dockerpwd')
         NEXUS_USER = credentials('nexusID')
         NEXUS_PWD = credentials('nexusPwd')
-        NEXUS_IMAGE_TAG = "10.0.0.174:8083/java-maven:v1.4.1"
-        DOCKER_TAG = "sanjeetkr/web-app:v1.4.1"
+        NEXUS_IMAGE_TAG = "10.0.0.174:8083/java-maven:v2.1.1"
+        DOCKER_TAG = "sanjeetkr/web-app:v2.1.1"
         NEXUS_ENDPOINT = "10.0.0.174:8083"
     }
 
@@ -25,7 +25,7 @@ pipeline{
         stage('Build jar file') {
             steps {
                 echo "Building jar"
-                sh 'mvn clean package deploy'
+                sh 'mvn clean package spring-boot:repackage deploy'
                 echo "executing pipeline"
             }
         }
