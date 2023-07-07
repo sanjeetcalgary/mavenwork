@@ -47,14 +47,40 @@ pipeline{
                 sh "docker push ${DOCKER_TAG}"
             }
         }
+        //provisioner - terraform
+        stage('Provision server') {
+            environment {
+                AWS_ACCCESS_KEY_ID = credentials('jenkins_aws_access_key_id')
+                AWS_SECRET_ACCESS_KEY = credentials('jenkins_aws_secret_access_key')
+                TF_VAR_aws_availzone = "us-east-1b"
+            }
+            steps {
+                script { //to execute terraform, go to that directory
+                    dir('terraform') {
+                        sh "terraform init"
+                        sh "terraform apply --auto-approve"
+                        EC2_PUBLIC_IP = sh(
+                            script: "terraform output ec2-publicIP"
+                            returnStdout: true
+                            ).trim()
+                    }
+                }
+            }
+        }
 
         stage('Deploy the image') {
             steps {
                 echo "Deployment phase"
                 script {
-                    def docker_cmd = "docker run -d -p 8080:8080 ${DOCKER_TAG}"
+                    sleep(time: 180, unit: "SECONDS")
+                    echo "Deploying now in EC2........."
+                    echo "${EC2_PUBLIC_IP}"
+                    def docker_cmd = "bash ./server-cmd.sh ${DOCKER_TAG}"
+                    def ec2Instance = "ec2-user@${EC2_PUBLIC_IP}"
                     sshagent(['ec2-server']) { // -o StrictHostKeyChecking=no : used to suppress popup
-                        sh "ssh -o StrictHostKeyChecking=no ec2-user@3.83.124.218 ${docker_cmd}"
+                        sh "scp -o StrictHostKeyChecking=no server-cmd.sh ${ec2Instance}:/home/ec2-user"
+                        sh "scp -o StrictHostKeyChecking=no docker-compose.yml ${ec2Instance}:/home/ec2-user"
+                        sh "ssh -o StrictHostKeyChecking=no ${ec2Instance} ${docker_cmd}"
                     }
                 }
             }
