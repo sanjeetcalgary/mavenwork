@@ -7,13 +7,13 @@ variable "vpc_cidr" {
 variable "subnet_cidr" {
   type = string
   description = "CIDR block for Subnet"
-  default = "10.0.10.0/24"
+  default = "10.1.0.0/24"
 }
 
 variable "aws_region_qa" {
   type = string
   description = "AWS region"
-  default = "us-west-1"
+  default = "us-east-1"
 }
 
 variable "aws_availzone" {
