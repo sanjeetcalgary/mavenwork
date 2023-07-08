@@ -3,7 +3,7 @@ pipeline{
 
     tools {
         maven 'slave-mvn'
-       
+        
     }
 
     environment {
@@ -84,7 +84,7 @@ pipeline{
 
         stage('Deploy the image') {
             agent {
-                label 'windows'
+                label 'kworkerthree'
             }
             steps {
                 echo "Deployment phase"

@@ -45,7 +45,7 @@ variable "https_port" {
 variable "own_ip" {
   type = string
   description = "Own IPv4"
-  default = "184.64.169.4"
+  default = "0.0.0.0"
 }
 
 variable "instance_type" {
