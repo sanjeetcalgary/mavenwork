@@ -27,6 +27,12 @@ pipeline{
                 sh 'mvn clean package spring-boot:repackage deploy'
                 echo "executing pipeline"
             }
+            post{
+                always{
+                    echo "Publishing test result"
+                    junit "**/target/surefire-reports/*.xml"
+                }
+            } 
         }
         
         stage('Build docker image for nexus') {
@@ -78,7 +84,7 @@ pipeline{
 
         stage('Deploy the image') {
             agent {
-                label 'kworkerthree'
+                label 'windows'
             }
             steps {
                 echo "Deployment phase"
@@ -99,11 +105,6 @@ pipeline{
 
 
     }
-    post{
-        always{
-            echo "Publishing test result"
-            junit "**/target/surefire-reports/*.xml"
-        }
-    } 
+    
     
 }
