@@ -1,9 +1,5 @@
 pipeline{
-    agent {
-        node{
-            label 'kworkerthree'
-        }
-    }
+    agent none
 
     tools {
         maven 'slave-mvn'
@@ -23,6 +19,9 @@ pipeline{
     stages {
         
         stage('Build jar file') {
+            agent {
+                label 'kworkerthree'
+            }
             steps {
                 echo "Building jar"
                 sh 'mvn clean package spring-boot:repackage deploy'
@@ -31,6 +30,9 @@ pipeline{
         }
         
         stage('Build docker image for nexus') {
+            agent {
+                label 'kworkerthree'
+            }
             steps {
                 echo "Building docker nexus image"
                 sh "docker build -t ${NEXUS_IMAGE_TAG} ."
@@ -40,6 +42,9 @@ pipeline{
         }
 
         stage('Build docker image for dockerhub') {
+            agent {
+                label 'kworkerthree'
+            }
             steps {
                 echo "Building docker image"
                 sh "docker build -t ${DOCKER_TAG} ."
@@ -49,6 +54,9 @@ pipeline{
         }
         //provisioner - terraform
         stage('Provision server') {
+            agent {
+                label 'windows'
+            }
             environment {
                 AWS_ACCCESS_KEY_ID = credentials('jenkins_aws_access_key_id')
                 AWS_SECRET_ACCESS_KEY = credentials('jenkins_aws_secret_access_key')
@@ -69,6 +77,9 @@ pipeline{
         }
 
         stage('Deploy the image') {
+            agent {
+                label 'kworkerthree'
+            }
             steps {
                 echo "Deployment phase"
                 script {
