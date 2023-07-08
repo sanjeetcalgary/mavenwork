@@ -11,8 +11,8 @@ pipeline{
         DOCKER_PASSWORD = credentials('dockerpwd')
         NEXUS_USER = credentials('nexusID')
         NEXUS_PWD = credentials('nexusPwd')
-        NEXUS_IMAGE_TAG = "10.0.0.174:8083/java-maven:v2.1.3"
-        DOCKER_TAG = "sanjeetkr/web-app:v2.1.3"
+        NEXUS_IMAGE_TAG = "10.0.0.174:8083/java-maven:v3.1.3"
+        DOCKER_TAG = "sanjeetkr/web-app:v3.1.3"
         NEXUS_ENDPOINT = "10.0.0.174:8083"
     }
 
