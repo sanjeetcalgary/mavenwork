@@ -4,7 +4,7 @@ data "aws_ami" "amzami" {
 
     filter {
         name = "name"
-        values = [ "Amazon Linux 2023 *" ]
+        values = [ "Amazon Linux 2023 AMI" ]
     }
   
     filter {
