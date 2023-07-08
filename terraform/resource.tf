@@ -74,7 +74,7 @@ resource "aws_instance" "myapp-server" {
   ami = data.aws_ami.amzami.id
   instance_type = var.instance_type
   availability_zone = var.aws_availzone
-  key_name = "terra"
+  key_name = "selfwindows"
   subnet_id = aws_subnet.nginx_subnet.id
   vpc_security_group_ids = [aws_security_group.nginx-ssh-sg.id]
   associate_public_ip_address = true
