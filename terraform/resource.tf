@@ -71,7 +71,8 @@ resource "aws_security_group" "nginx-ssh-sg" {
 }
 
 resource "aws_instance" "myapp-server" {
-  ami = data.aws_ami.amzami.id
+  ami = "ami-06ca3ca175f37dd66"
+  #data.aws_ami.amzami.id
   instance_type = var.instance_type
   availability_zone = var.aws_availzone
   key_name = "testkey"
