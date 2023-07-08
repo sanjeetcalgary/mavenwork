@@ -1,6 +1,8 @@
+/*
 output "AWS-AMI" {
   value = data.aws_ami.amzami.id
 }
+*/
 
 output "vpc_id" {
     value = aws_vpc.nginx_vpc.id
